@@ -1,0 +1,127 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<section class="container my-4 text-center">
+
+    <h2 class="mb-2">Search books and browse your favorite</h2>
+
+    <p class="text-muted">
+        Just enter the search query to obtain the results
+    </p>
+
+    <form action="" method="post" class="mb-4">
+
+        {% csrf_token %}
+
+        <div class="d-flex justify-content-center align-items-center gap-2 max-width-600 mx-auto">
+
+            <input
+                type="text"
+                name="text"
+                class="form-control w-50"
+                placeholder="Enter your search..."
+                required
+            >
+
+            <input
+                class="btn btn-danger"
+                type="submit"
+                value="Submit"
+            >
+
+        </div>
+
+    </form>
+
+
+    {% for result in results %}
+
+        <a
+            href="{{ result.book_url }}"
+            target="_blank"
+            class="text-decoration-none text-dark"
+        >
+
+            <div
+                class="card my-3 shadow-sm"
+                style="background-color: #8ecae6; border: none;"
+            >
+
+                <div class="card-body p-4 text-center">
+
+                    {% if result.thumbnail %}
+
+                        <img
+                            class="img-fluid mb-3 rounded shadow-sm"
+                            src="{{ result.thumbnail }}"
+                            alt="{{ result.title }}"
+                            style="max-height: 200px;"
+                        >
+
+                    {% endif %}
+
+
+                    <h3 class="fw-bold mb-1">
+                        {{ result.title }}
+                    </h3>
+
+
+                    {% if result.author %}
+
+                        <p class="mb-2">
+                            <strong>Author:</strong>
+                            {{ result.author }}
+                        </p>
+
+                    {% endif %}
+
+
+                    {% if result.year %}
+
+                        <p class="mb-2">
+                            <strong>First Published:</strong>
+                            {{ result.year }}
+                        </p>
+
+                    {% endif %}
+
+
+                    {% if result.edition_count %}
+
+                        <p class="mb-2">
+                            <strong>Editions:</strong>
+                            {{ result.edition_count }}
+                        </p>
+
+                    {% endif %}
+
+
+                    <button class="btn btn-primary mt-2">
+                        Open Book
+                    </button>
+
+                </div>
+
+            </div>
+
+        </a>
+
+
+    {% empty %}
+
+        {% if request.method == "POST" %}
+
+            <p class="text-muted mt-4">
+                No books found. Try another search term.
+            </p>
+
+        {% endif %}
+
+    {% endfor %}
+
+</section>
+
+{% endblock content %}
